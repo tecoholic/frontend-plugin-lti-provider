@@ -1,0 +1,12 @@
+.git
+.gitignore
+.eslintrc.js
+jest.config.js
+*.test.jsx
+*.test.js
+.env*
+node_modules/
+dist/
+coverage/
+.DS_Store
+*.log
