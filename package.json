@@ -1,12 +1,12 @@
 {
     "name": "@tecoholic/frontend-plugin-lti-provider",
     "version": "0.1.0",
-    "description": "LTI Provider widget for displaying and copying LTI provider URLs",
+    "description": "LTI Provider related UI widgets for Open edX.",
     "main": "index.jsx",
     "license": "AGPL-3.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/tecoholic/frontend-plugin-lti-provider.git"
+        "url": "git+https://github.com/tecoholic/frontend-plugin-lti-provider.git"
     },
     "homepage": "https://github.com/tecoholic/frontend-plugin-lti-provider/",
     "keywords": [
