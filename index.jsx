@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { getConfig } from '@edx/frontend-platform';
 import { Card, Button, Form } from '@openedx/paragon';
 
-const LTIURLsWidget = ({ blockId, unitTitle, courseId, xBlocks }) => {
+export const AuthoringUnitPageSidebarWidget = ({ blockId, unitTitle, courseId, xBlocks }) => {
   const [component, setComponent] = useState(blockId);
   const baseUrl = getConfig().LMS_BASE_URL;
 
@@ -55,7 +55,7 @@ const LTIURLsWidget = ({ blockId, unitTitle, courseId, xBlocks }) => {
   );
 };
 
-LTIURLsWidget.propTypes = {
+AuthoringUnitPageSidebarWidget.propTypes = {
   blockId: PropTypes.string.isRequired,
   unitTitle: PropTypes.string.isRequired,
   courseId: PropTypes.string.isRequired,
@@ -64,5 +64,3 @@ LTIURLsWidget.propTypes = {
     name: PropTypes.string.isRequired,
   })).isRequired,
 };
-
-export default LTIURLsWidget;

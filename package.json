@@ -1,8 +1,15 @@
 {
     "name": "@tecoholic/frontend-plugin-lti-provider",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "description": "LTI Provider related UI widgets for Open edX.",
-    "main": "index.jsx",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
+    "exports": {
+        ".": {
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.js"
+        }
+    },
     "license": "AGPL-3.0",
     "repository": {
         "type": "git",
@@ -11,16 +18,29 @@
     "homepage": "https://github.com/tecoholic/frontend-plugin-lti-provider/",
     "keywords": [
         "lti",
-        "provider",
         "openedx",
         "frontend",
         "plugin"
     ],
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "node ./scripts/bundle.mjs",
+        "dev": "node ./scripts/bundle.mjs --watch",
+        "prepublishOnly": "npm run build"
+    },
     "author": "Arunmozhi",
+    "devDependencies": {
+        "esbuild": "^0.27.0"
+    },
     "peerDependencies": {
         "@edx/frontend-platform": "^8.4.0",
         "@openedx/paragon": "^23.5.0",
         "prop-types": "^15.8.1",
-        "react": "^18.3.1"
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
     }
 }

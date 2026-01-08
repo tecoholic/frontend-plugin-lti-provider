@@ -2,46 +2,97 @@
 
 LTI Provider widget for displaying and copying LTI provider URLs in Open edX.
 
-## Installation
+## Widgets provided by the Plugin
 
-```bash
-npm install @tecoholic/frontend-plugins-lti-provider
-```
+### AuthoringUnitPageSidebarWidget
+
+Displays LTI Provider URLs for the unit and its components in the sidebar of the Unit page in Studio.
+
+## Screenshots
+
+| Authoring unit page sidebar widget | Dropdown view of available URLs|
+| --- | --- |
+| ![Authoring unit page sidebar widget](images/AuthoringUnitPageSidebarWidget.png) | ![Authoring unit page sidebar widget dropdown](images/AuthoringUnitPageSidebarWidget_dropdown.png) |
 
 ## Usage
 
-```jsx
-import LTIURLsWidget from '@tecoholic/frontend-plugins-lti-provider';
+To use the widgets from this plugin in your instance, create a Tutor plugin with the following contents:
 
-<LTIURLsWidget
-  blockId="block-v1:test+test+test+type@vertical+block@abc123"
-  unitTitle="Unit 1"
-  courseId="course-v1:test+test+test"
-  xBlocks={[
-    { id: 'block-id-1', name: 'Component 1' },
-    { id: 'block-id-2', name: 'Component 2' },
-  ]}
-/>
+```python
+from tutormfe.hooks import PLUGIN_SLOTS
+from tutor import hooks
+
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "mfe-dockerfile-post-npm-install-authoring",
+        """
+# Install the LTI Provider frontend plugin package
+RUN npm install @tecoholic/frontend-plugin-lti-provider
+""",
+    )
+)
+
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "mfe-env-config-buildtime-imports",
+        """
+import { AuthoringUnitPageSidebarWidget } from '@tecoholic/frontend-plugin-lti-provider';
+""",
+    )
+)
+
+PLUGIN_SLOTS.add_items(
+    [
+        (
+            "authoring",
+            "org.openedx.frontend.authoring.course_unit_sidebar.v2",
+            """
+            {
+              op: PLUGIN_OPERATIONS.Insert,
+              widget: {
+                priority: 60,
+                id: 'lti-provider-widget',
+                type: DIRECT_PLUGIN,
+                RenderWidget: AuthoringUnitPageSidebarWidget
+              }
+            }""",
+        ),
+    ]
+)
 ```
 
-## Props
+## Development
 
-- `blockId` (string, required): The block ID of the unit
-- `unitTitle` (string, required): The title of the unit
-- `courseId` (string, required): The course ID
-- `xBlocks` (array, required): Array of xBlock objects with `id` and `name` properties
+1. In this repo: `npm install` and `npm run watch`.
+2. In the host app do `npm install ../frontend-plugin-lti-provider` (assuming they are present side-by-side in the same parent directory)
+3. In the host app bundler config, ensure symlinked deps resolve from the app:
+   - Add `symlinks: false` to the `resolve` object in `webpack.dev.config.js`.
+4. Create a `env.config.jsx` in the host app with the following contents:
 
-## Features
-
-- Display LTI Provider URL for the current unit or selected component
-- Copy URL to clipboard with a single click
-- Dropdown to select different components within the unit
-
-## Requirements
-
-- React 16.8+
-- @edx/frontend-platform ^15.0.0
-- @openedx/paragon ^17.0.0
+    ```jsx
+    import { DIRECT_PLUGIN, PLUGIN_OPERATIONS  } from '@openedx/frontend-plugin-framework';
+    import { AuthoringUnitPageSidebarWidget } from '@tecoholic/frontend-plugin-lti-provider';
+    const config = {
+      pluginSlots: {
+        'org.openedx.frontend.authoring.course_unit_sidebar.v2': {
+          keepDefault: true,
+          plugins: [
+            {
+              op: PLUGIN_OPERATIONS.Insert,
+              widget: {
+                priority: 60,
+                id: 'lti-provider-widget',
+                type: DIRECT_PLUGIN,
+                RenderWidget: AuthoringUnitPageSidebarWidget
+              }
+            }
+          ]
+        }
+      }
+    }
+    
+    export default config;
+    ```
 
 ## License
 
